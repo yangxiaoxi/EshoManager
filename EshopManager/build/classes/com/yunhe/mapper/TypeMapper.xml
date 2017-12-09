@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="com.yunhe.mapper.TypeMapper">
+	 
+	 <!-- 通过parent_id字段查找Type对象列表-->
+	<select id="selectTypeByParent_id" parameterType="int" resultType="com.yunhe.pojo.Type">
+	    select *  from  tb_type where parent_id=#{parent_id}
+	</select>
+	
+	<!-- 添加type -->
+	<insert id="insertType" parameterType="com.yunhe.pojo.Type">
+	   insert tb_type(type_name,parent_id)
+	   values(#{type_name},#{parent_id})
+	</insert>
+	
+	<!-- 删除某个类型 -->
+	<delete id="deleteType" parameterType="int">
+	  delete from tb_type where type_id=#{type_id}
+	</delete>
+
+</mapper>
+

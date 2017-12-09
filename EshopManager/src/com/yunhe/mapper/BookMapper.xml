@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="com.yunhe.mapper.BookMapper">
+ 
+  <resultMap type="com.yunhe.pojo.Book" id="BookTypeResultMap">
+  
+	   <id column="book_id" property="book_id"/>
+	   <result column="book_name" property="book_name"/>
+	   <result column="book_price" property="book_price"/>
+	   <result column="status" property="status"/>
+	   <result column="is_new" property="is_new"/>
+	   <result column="is_hot" property="is_hot"/>
+	   <result column="book_author" property="book_author"/>
+	   <association property="type" javaType="com.yunhe.pojo.Type">
+	     <id column="type_id" property="type_id"/>
+	     <result column="type_name" property="type_name"/>
+	   </association>
+  </resultMap>
+	 
+	 <!--1, 多条件分页查询的sql片段 -->
+	 <sql id="selectBookPage">
+	     <if test="book_name !=null and book_name !=''">
+		        and book_name like '%${book_name}%'
+		    </if>
+		    <if test="book_author !=null and book_author !=''">
+		        and book_author like '%${book_author}%'
+		    </if>
+		    <if test="status !=null and status!=-1">
+		        and status = #{status}
+		    </if>
+		     and is_garbage = 0
+	 </sql>
+	 
+	 
+	 
+	 <!--2, 多条件查询书籍信息 (带分页)-->
+    <select id="selectBookByConditionPage" parameterType="java.util.HashMap" resultMap="BookTypeResultMap"> 
+	     select t1.*,type_name from tb_book t1,tb_type t2
+	      <where> 
+	       t1.type_id=t2.type_id
+		    <include refid="selectBookPage"></include>
+	     </where>
+	      order by status desc ,is_new desc, is_hot desc ,book_date desc
+	      limit #{currentIndex},#{pageSize}
+	</select>
+ 
+ <!--3, 多条件查询记录的条数-->
+    <select id="selectCountByConditionPage" parameterType="java.util.HashMap" resultType="int"> 
+	     select count(*) from tb_book
+	      <where> 
+		    <include refid="selectBookPage"></include>
+	     </where>
+	</select>
+	
+	<!--4, 通过id查找书籍 -->
+	<select id="selectBookById"  parameterType="int" resultType="com.yunhe.pojo.Book">
+	    select * from tb_book where book_id=#{book_id}
+	</select>
+	
+	<!--5. 删除某本书 -->
+	<delete id="delereBookById" parameterType="int" >
+	     delete from tb_book where book_id=#{book_id}
+	</delete>
+	
+	<!-- 6, 操作书籍 （修改书籍的状态） 1-放入回收站 2-上架 3-下架-->
+    <!-- 4-新品 5-非新品 6-热销 7-非热销 8-从回收站还原--> 
+	
+	<update id="operateBook" parameterType="java.util.HashMap">
+	   update tb_book 
+	   <set>
+		     <if test="operate_id==1">
+		         is_garbage=1 
+		     </if>
+		     <if test="operate_id==2">
+		         status=1 
+		     </if>
+		     <if test="operate_id==3">
+		         status=0
+		     </if>
+		     <if test="operate_id==4">
+		         is_new=1 
+		     </if>
+		     <if test="operate_id==5">
+		         is_new=0
+		     </if>
+		     <if test="operate_id==6">
+		         is_hot=1 
+		     </if>
+		     <if test="operate_id==7">
+		         is_hot=0 
+		     </if>
+		     <if test="operate_id==8">
+		         is_garbage=0 
+		     </if>
+		      where book_id in
+	   </set>
+	   <foreach collection="bookIdlist" open="(" close=")" item="book_id" separator=",">
+           #{book_id}  
+	   </foreach>
+	</update>
+	
+	
+	<!--7, 修改某本书的具体信息 -->
+	<update id="updateBook" parameterType="com.yunhe.pojo.Book">
+	
+	
+	</update>
+	
+	<select id="selectBookRecyle" resultMap="BookTypeResultMap">
+		  select book_id ,book_name,book_price,type_name from tb_book t1 
+	      inner join tb_type t2  on t1.type_id=t2.type_id
+	      where is_garbage=1
+	</select>
+	
+	<!--  8,查询回收站的书籍数量-->
+   <select id="selectCountRecyle" resultType="int">
+		  select count(*) from tb_book where is_garbage=1
+	</select>
+	
+  <!--  9,查询所有书籍的id和name-->
+   <select id="selectAllBook" resultType="com.yunhe.pojo.Book">
+		  select book_id,book_name from tb_book 
+  </select>
+	
+</mapper>            

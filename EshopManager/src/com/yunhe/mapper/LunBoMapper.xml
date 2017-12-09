@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="com.yunhe.mapper.LunBoMapper">
+   <!-- 1,插入轮播图 -->
+  <insert id="insertPhoto" parameterType="java.util.HashMap" >
+     insert into tb_ad (ad_img,book_id) values(#{ad_img},#{book_id})
+  </insert>
+  
+  <!-- 2,删除轮播图 -->
+  <delete id="deletePhoto" parameterType="int">
+     delete from tb_ad where ad_id=#{ad_id}
+  </delete>
+  
+  <!-- 查找所有的轮播图 -->
+  <select id="selectPhoto" resultType="com.yunhe.pojo.Ad">
+     select * from tb_ad ;
+  </select>
+</mapper>            

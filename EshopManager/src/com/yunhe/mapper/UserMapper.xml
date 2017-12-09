@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="com.yunhe.mapper.UserMapper">
+	 
+	 <!-- 查询所有的用户数 -->
+	<select id="selectAllUserCount" resultType="java.lang.Integer">
+	  select count(*) from tb_user
+	</select>
+	
+	 <!--查询在线的用户数-->
+	<select id="selectOnlieUserCount" resultType="java.lang.Integer">
+	  select count(*) from tb_user where is_online = 1
+	</select>
+	
+	 <!--查询所有的用户信息-->
+	<select id="selecAlltUserInfo" resultType="com.yunhe.pojo.User">
+	   select user_name,user_email,user_sex,is_activated from tb_user order by time desc limit 5
+	</select>
+	
+	<!--  查询今天注册的用户数 -->
+	<select id="selectCountTodayRegist" resultType="java.lang.Integer">
+	   select count(*) from tb_user where date_format(now(),'%yyyy-%mm-%dd%') = date_format(time,'%yyyy-%mm-%dd%');
+	</select>
+
+</mapper>

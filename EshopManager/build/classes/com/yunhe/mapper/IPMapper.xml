@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="com.yunhe.mapper.IPMapper">
+	 
+	 <!-- 查询所有的pv访问量-->
+	<select id="selectTopList" resultType="com.yunhe.pojo.IP">
+	    select * from tb_ip order by time desc limit 5
+	</select>
+	
+	<select id="selectCountTodayIpNum" resultType="java.lang.Integer">
+	 select count(*) from tb_ip where date_format(now(),'%yyyy-%mm-%dd%') = date_format(time,'%yyyy-%mm-%dd%'); 
+	</select>
+	 
+
+</mapper>

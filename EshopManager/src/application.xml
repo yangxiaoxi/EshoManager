@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+	
+	  <context:property-placeholder location="eshop.properties"/>
+	 <!-- 配置数据源 -->
+	 <bean id="dbSource" class="org.apache.commons.dbcp.BasicDataSource">
+	     <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+	     <property name="password" value="${jdbc.password}"></property>
+	     <property name="username" value="${jdbc.username}"></property>
+	     <property name="url" value="${jdbc.url}"></property>
+	 </bean>
+	 
+	 <!-- 配置sqlsessionFactory -->
+	 <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="dataSource" ref="dbSource"></property>
+	    <property name="configLocation" value="classpath:SqlMapConfig.xml"></property>
+	 </bean>
+	  
+	  
+	  <!-- 传统方式配置Mapper -->
+	 <!-- 配置bookMapper -->
+	 <bean id="bookMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.yunhe.mapper.BookMapper"></property>
+	    <property name="sqlSessionFactory" ref="factory"></property>
+	 </bean>
+	  <!-- 配置iPMapper -->
+	 <bean id="iPMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.yunhe.mapper.IPMapper"></property>
+	    <property name="sqlSessionFactory" ref="factory"></property>
+	 </bean>
+	 <!-- 配置orderMapper -->
+	 <bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.yunhe.mapper.OrderMapper"></property>
+	    <property name="sqlSessionFactory" ref="factory"></property>
+	 </bean>
+	  <!-- 配置pvMapper -->
+	 <bean id="pVMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.yunhe.mapper.PVMapper"></property>
+	    <property name="sqlSessionFactory" ref="factory"></property>
+	 </bean>
+	  <!-- 配置typeMapper -->
+	 <bean id="typeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.yunhe.mapper.TypeMapper"></property>
+	    <property name="sqlSessionFactory" ref="factory"></property>
+	 </bean>
+	 <!-- 配置userMapper -->
+	 <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	    <property name="mapperInterface" value="com.yunhe.mapper.UserMapper"></property>
+	    <property name="sqlSessionFactory" ref="factory"></property>
+	 </bean>
+	<!-- 配置bookbiz -->
+	<bean id="bookService" class="com.yunhe.service.impl.BooKServiceImpl">
+	  <property name="booKMapper" ref="bookMapper"></property>
+	</bean>
+	
+	<!-- 配置ipbiz -->
+	<bean id="iPService" class="com.yunhe.service.impl.IPServiceImpl">
+	  <property name="ipMapper" ref="iPMapper"></property>
+	</bean>
+	
+	<!-- 配置orderbiz -->
+	<bean id="orderService" class="com.yunhe.service.impl.OrderServiceImpl">
+	  <property name="orderMapper" ref="orderMapper"></property>
+	</bean>
+	
+	<!-- 配置pVbiz -->
+	<bean id="pVService" class="com.yunhe.service.impl.PVServiceImpl">
+	  <property name="pvMapper" ref="pVMapper"></property>
+	</bean>
+	
+	<!-- 配置typebiz -->
+	<bean id="typeService" class="com.yunhe.service.impl.TypeServiceImpl">
+	  <property name="typeMapper" ref="typeMapper"></property>
+	</bean>
+	<!-- 配置userbiz -->
+	<bean id="userService" class="com.yunhe.service.impl.UserServiceImpl">
+	  <property name="userMapper" ref="userMapper"></property>
+	</bean>
+</beans>
